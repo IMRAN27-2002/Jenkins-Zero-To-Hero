@@ -1,0 +1,37 @@
+pipeline {
+    agent none
+
+    stages {
+
+        stage('Backend') {
+            agent {
+                docker {
+                    image 'maven:3.8.1-adoptopenjdk-11'
+                }
+            }
+
+            steps {
+                checkout scm
+
+                sh '''
+                    mvn --version
+                    mvn clean install
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Maven build completed successfully'
+        }
+
+        failure {
+            echo 'Maven build failed'
+        }
+
+        always {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+    }
+}
