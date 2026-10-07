@@ -11,26 +11,26 @@ pipeline {
             }
 
             steps {
-
                 sh '''
                     mvn --version
                     mvn clean install
                 '''
             }
-        }
-    }
 
-    post {
-        success {
-            echo 'Maven build completed successfully'
-        }
+            post {
+                success {
+                    echo 'Maven build completed successfully'
+                }
 
-        failure {
-            echo 'Maven build failed'
-        }
+                failure {
+                    echo 'Maven build failed'
+                }
 
-        always {
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                always {
+                    archiveArtifacts artifacts: 'target/*.jar',
+                                    fingerprint: true
+                }
+            }
         }
     }
 }
